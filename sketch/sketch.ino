@@ -49,8 +49,8 @@ void setup() {
     pinMode(LED_RED, OUTPUT);
     pinMode(LED_GREEN, OUTPUT);
     pinMode(LED_BLUE, OUTPUT);
-    digitalWrite(LED_RED, LOW);
-    digitalWrite(LED_GREEN, LOW);
+    digitalWrite(LED_RED, HIGH);
+    digitalWrite(LED_GREEN, HIGH);
     digitalWrite(LED_BLUE, HIGH);
 
     // You can enable or disable the library at any moment
@@ -58,18 +58,47 @@ void setup() {
     fauxmo.enable(true);
 
     // Add virtual devices
-    fauxmo.addDevice("switch one");
+    fauxmo.addDevice("switch kitchen");
+    fauxmo.addDevice("switch livingroom");
+    fauxmo.addDevice("switch bedroom");
 
     // fauxmoESP 2.0.0 has changed the callback signature to add the device_id, this WARRANTY
     // it's easier to match devices to action without having to compare strings.
     fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state) {
         Serial.printf("[MAIN] Device #%d (%s) state: %s\n", device_id, device_name, state ? "ON" : "OFF");
-        digitalWrite(LED_BLUE, !(digitalRead(LED_BLUE) == HIGH));
+        switch(device_id){
+          case 0:
+            digitalWrite(LED_RED, state);
+            break;
+          case 1:
+            digitalWrite(LED_GREEN, state);
+            break;
+          case 2:
+            digitalWrite(LED_BLUE, state);
+            break;
+          default:
+            Serial.printf("Unhandled device #%d\n", device_id);
+            break;
+        }
     });
 
     // Callback to retrieve current state (for GetBinaryState queries)
     fauxmo.onGetState([](unsigned char device_id, const char * device_name) {
-        return digitalRead(LED_BLUE) == HIGH;
+        switch(device_id){
+          case 0: 
+            return digitalRead(LED_RED) == HIGH;
+            break;
+          case 1:
+            return digitalRead(LED_GREEN) == HIGH;
+            break;
+          case 2:
+            return digitalRead(LED_BLUE) == HIGH;
+            break;
+          default:
+            Serial.printf("Unhandled device #%d\n", device_id);
+            return false;
+            break;
+        }
     });
 
 }
