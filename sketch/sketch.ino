@@ -17,7 +17,6 @@ fauxmoESP fauxmo;
 
 void setup() {
 
-  // Init serial port and clean garbage
   Serial.begin(SERIAL_BAUDRATE);
   Serial.println();
   Serial.println();
