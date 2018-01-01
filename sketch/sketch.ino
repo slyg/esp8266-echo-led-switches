@@ -22,11 +22,7 @@ void setup() {
   Serial.println();
   Serial.println();
 
-  // Wifi
   wifiSetup();
-
-  // You can enable or disable the library at any moment
-  // Disabling it will prevent the devices from being discovered and switched
   fauxmo.enable(true);
 
   // Add LED devices
@@ -41,8 +37,6 @@ void setup() {
   // Add virtual groups
   fauxmo.addDevice("switch everything");
 
-  // fauxmoESP 2.0.0 has changed the callback signature to add the device_id, this WARRANTY
-  // it's easier to match devices to action without having to compare strings.
   fauxmo.onSetState([](unsigned char device_id, const char * device_name, bool state) {
     Serial.printf("[MAIN] Device #%d (%s) state: %s\n", device_id, device_name, state ? "ON" : "OFF");
     switch(device_id){
