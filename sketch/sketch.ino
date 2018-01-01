@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "fauxmoESP.h"
-#include "device.h"
+#include "ddevice.h"
 #include "wifi.h"
 
 #define SERIAL_BAUDRATE   115200
